@@ -1,6 +1,8 @@
 name: Docker Build and Publish
 
-on: push  # O workflow será acionado sempre que ocorrer um push no repositório
+on:
+  release:
+    types: [created]  # O workflow será acionado sempre que ocorrer um push no repositório
 
 jobs:
   build:
@@ -17,9 +19,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Extract version
+      - name: Extract version from tag
         id: vars
-        run: echo "VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         run: |
